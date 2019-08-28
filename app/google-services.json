@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "544733178008",
+    "firebase_url": "https://castro-c1db3.firebaseio.com",
+    "project_id": "castro-c1db3",
+    "storage_bucket": "castro-c1db3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544733178008:android:d478aa81d7b78397",
+        "android_client_info": {
+          "package_name": "com.example.castro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544733178008-j9hahlahru2dmpig3h0ufcegk0qh54hb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.castro",
+            "certificate_hash": "0a1b5893b339df229f1b806a43f7b79825a48339"
+          }
+        },
+        {
+          "client_id": "544733178008-dqasij4861ralrf4usk4n7q52ran3t49.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmNgi1bQMND-EwmIANoFWe5hRsIQw07Iw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544733178008-dqasij4861ralrf4usk4n7q52ran3t49.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

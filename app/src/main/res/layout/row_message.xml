@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/msg_wrapper"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/sender_row">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/msg_sender_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/user_avatar"
+                />
+
+            <TextView
+                android:id="@+id/msg_sender_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chat_bg_white_rounded"
+                android:gravity="center"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="12dp"
+                android:text="Sender Message..."
+                android:layout_marginTop="3dp"
+                android:layout_marginHorizontal="8dp"
+                android:textColor="@color/colorBlack" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/receiver_row"
+            android:layout_alignParentRight="true">
+
+            <TextView
+                android:id="@+id/msg_receiver_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chat_bg_green_rounded"
+                android:gravity="center"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="12dp"
+                android:text="receiver message..."
+                android:layout_marginTop="3dp"
+                android:layout_marginHorizontal="8dp"
+                android:textColor="@color/colorWhite" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/msg_receiver_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/user_avatar"
+                />
+        </LinearLayout>
+
+
+</RelativeLayout>

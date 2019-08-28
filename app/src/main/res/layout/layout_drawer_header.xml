@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_profile_bg"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:paddingTop="18dp"
+    android:paddingLeft="25dp"
+    android:paddingBottom="16dp"
+    android:gravity="bottom"
+    android:background="@drawable/header_bg2"
+    android:alpha="1">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/drawer_profile_img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user_avatar"
+        />
+
+     <TextView
+        android:id="@+id/drawer_profile_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Izedom Emmanuel"
+        android:layout_marginTop="4dp"
+        android:textSize="16sp"
+        android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:id="@+id/drawer_profile_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STFICT001"
+        android:textSize="12sp"
+        android:layout_marginTop="3dp"
+        android:textStyle="italic"
+        android:textColor="@color/colorWhite"
+        />
+</LinearLayout>
