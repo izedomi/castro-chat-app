@@ -15,21 +15,35 @@
                 android:id="@+id/msg_sender_image"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:src="@drawable/user_avatar"
-                />
+                android:src="@drawable/user_avatar" />
 
-            <TextView
-                android:id="@+id/msg_sender_text"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/chat_bg_white_rounded"
-                android:gravity="center"
-                android:paddingVertical="10dp"
-                android:paddingHorizontal="12dp"
-                android:text="Sender Message..."
-                android:layout_marginTop="3dp"
-                android:layout_marginHorizontal="8dp"
-                android:textColor="@color/colorBlack" />
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/msg_sender_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_bg_white_rounded"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="12dp"
+                    android:text="Sender Message..."
+                    android:layout_marginTop="3dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:textColor="@color/colorBlack" />
+                <ImageView
+                    android:id="@+id/sender_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@drawable/bg_friend_chat"
+                    android:scaleType="centerCrop"/>
+
+            </LinearLayout>
+
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,18 +52,31 @@
             android:id="@+id/receiver_row"
             android:layout_alignParentRight="true">
 
-            <TextView
-                android:id="@+id/msg_receiver_text"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/chat_bg_green_rounded"
-                android:gravity="center"
-                android:paddingVertical="10dp"
-                android:paddingHorizontal="12dp"
-                android:text="receiver message..."
-                android:layout_marginTop="3dp"
-                android:layout_marginHorizontal="8dp"
-                android:textColor="@color/colorWhite" />
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/msg_receiver_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_bg_green_rounded"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="12dp"
+                    android:text="receiver message..."
+                    android:layout_marginTop="3dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:textColor="@color/colorWhite" />
+
+                <ImageView
+                    android:id="@+id/receiver_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@drawable/bg_friend_chat"
+                    android:scaleType="centerCrop"/>
+            </LinearLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/msg_receiver_image"
@@ -58,6 +85,5 @@
                 android:src="@drawable/user_avatar"
                 />
         </LinearLayout>
-
 
 </RelativeLayout>

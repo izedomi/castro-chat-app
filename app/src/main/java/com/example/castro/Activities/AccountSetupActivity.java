@@ -134,7 +134,7 @@ public class AccountSetupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                galleryIntent.setType("imag/*");
+                galleryIntent.setType("image/*");
                 startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
 
             }

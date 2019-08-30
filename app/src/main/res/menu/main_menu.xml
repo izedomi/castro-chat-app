@@ -3,22 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Find Friends"
-        android:id="@+id/find_friends" />
-    <item
         android:id="@+id/all_users"
-        android:title="All Users" />
+        android:title="Find Colleagues" />
+
+    <item
+        android:id="@+id/send_broadcast"
+        android:title="Send Broadcast"
+        android:visible="false"/>
 
     <item
         android:id="@+id/sign_out"
         android:title="Sign Out" />
-
-    <item
-        android:id="@+id/send"
-        android:title=""
-        android:icon="@drawable/ic_search"
-        app:showAsAction="always"
-        />
-
 
 </menu>

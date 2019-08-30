@@ -16,17 +16,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.castro.Adapters.MessagesRecyclerAdapter;
 import com.example.castro.Models.MessagesModel;
 import com.example.castro.R;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -40,17 +38,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatActivity extends AppCompatActivity {
+public class BroadcastActivity extends AppCompatActivity {
 
     private final int GALLERY_REQUEST_CODE = 1;
 
@@ -64,6 +59,7 @@ public class ChatActivity extends AppCompatActivity {
     TextView tvToolbarName;
     TextView tvToolbarLastSeen;
     CircleImageView imvToolbarImage;
+    ScrollView scrollView;
     RecyclerView rcv;
 
     MessagesRecyclerAdapter adapter;
@@ -81,11 +77,10 @@ public class ChatActivity extends AppCompatActivity {
     private String lastKey = "";
     private String prevKey = "";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_broadcast);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tvToolbarName = (TextView) findViewById(R.id.toolbar_name);
@@ -94,10 +89,11 @@ public class ChatActivity extends AppCompatActivity {
         imgBtnGallery = (ImageButton) findViewById(R.id.img_btn_gallery);
         imgBtnSendMsg = (ImageButton) findViewById(R.id.img_btn_send_msg);
         edtTextMsg = (EditText) findViewById(R.id.edt_chat_msg);
+        scrollView = (ScrollView) findViewById(R.id.scroolViewSend);
         rcv = (RecyclerView) findViewById(R.id.rcv_center);
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.msg_swipe_layout);
 
-        adapter = new MessagesRecyclerAdapter(mList, ChatActivity.this, true);
+        adapter = new MessagesRecyclerAdapter(mList, BroadcastActivity.this, false);
 
         mAuth = FirebaseAuth.getInstance();
         mReference = FirebaseDatabase.getInstance().getReference();
@@ -106,7 +102,8 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        userId = getIntent().getStringExtra("user_id");
+        //userId = getIntent().getStringExtra("user_id");
+        userId = mAuth.getCurrentUser().getUid();
 
         Toast.makeText(this, mAuth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
         Log.i("jjj", mAuth.getCurrentUser().getUid());
@@ -122,17 +119,17 @@ public class ChatActivity extends AppCompatActivity {
         mReference.child("Users").child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-              //  Toast.makeText(ChatActivity.this, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
-              //  Log.i("CHAT ACTIVITY:", dataSnapshot.getValue().toString());
-                    String online = dataSnapshot.child("online").getValue().toString();
-                    if(online.equals("true")){tvToolbarLastSeen.setText("Online");}
-                    else{
-                        TimeAgo timeAgo = new TimeAgo();
-                        Long l = Long.parseLong(online);
-                        String lastSeen = timeAgo.getTimeAgo(l, getApplicationContext());
-                        tvToolbarLastSeen.setText(lastSeen);
-                    }
-                tvToolbarName.setText(dataSnapshot.child("fullname").getValue().toString());
+                //  Toast.makeText(ChatActivity.this, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+                //  Log.i("CHAT ACTIVITY:", dataSnapshot.getValue().toString());
+                String online = dataSnapshot.child("online").getValue().toString();
+                if(online.equals("true")){tvToolbarLastSeen.setText("Online");}
+                else{
+                    TimeAgo timeAgo = new TimeAgo();
+                    Long l = Long.parseLong(online);
+                    String lastSeen = timeAgo.getTimeAgo(l, getApplicationContext());
+                    tvToolbarLastSeen.setText(lastSeen);
+                }
+                //tvToolbarName.setText(dataSnapshot.child("fullname").getValue().toString());
                 Picasso.get().load(dataSnapshot.child("image_url").getValue().toString())
                         .placeholder(R.drawable.user_avatar)
                         .error(R.drawable.user_avatar)
@@ -146,45 +143,15 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mReference.child("Chats").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.hasChild(userId)){
-
-                    Map chatAddMap = new HashMap();
-                    chatAddMap.put("seen", false);
-                    chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
-
-                    Map chatUserMap = new HashMap();
-                    chatUserMap.put("Chats/"+mAuth.getCurrentUser().getUid()+"/"+userId, chatAddMap);
-                    chatUserMap.put("Chats/"+userId+"/"+mAuth.getCurrentUser().getUid(), chatAddMap);
-
-                    mReference.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                            if(databaseError != null){
-                                Log.i("CHAT LOG ERROR", databaseError.getMessage().toString());
-                            }
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         imgBtnSendMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String msg = edtTextMsg.getText().toString().trim();
                 if(!msg.isEmpty()){
-                    String pushKey = mReference.child("Messages").child(mAuth.getCurrentUser().getUid()).child(userId).push().getKey();
 
-                    String currentUserRef = "Messages/"+mAuth.getCurrentUser().getUid()+"/"+userId+"/"+pushKey;
-                    String chatUserRef = "Messages/"+userId+"/"+mAuth.getCurrentUser().getUid()+"/"+pushKey;
+                    String pushKey = mReference.child("Broadcast").push().getKey();
+
+                    String broadCastRef = "Broadcast/"+pushKey;
 
                     Map msgAddMap = new HashMap();
                     msgAddMap.put("message", msg);
@@ -194,8 +161,7 @@ public class ChatActivity extends AppCompatActivity {
                     msgAddMap.put("from", mAuth.getCurrentUser().getUid());
 
                     Map msgUserMap = new HashMap();
-                    msgUserMap.put(currentUserRef, msgAddMap);
-                    msgUserMap.put(chatUserRef, msgAddMap);
+                    msgUserMap.put(broadCastRef, msgAddMap);
 
                     mReference.updateChildren(msgUserMap, new DatabaseReference.CompletionListener() {
                         @Override
@@ -203,13 +169,23 @@ public class ChatActivity extends AppCompatActivity {
                             if(databaseError != null){
                                 Log.i("MESSAGE CHAT ERROR", databaseError.getMessage().toString());
                             }
+                            else{
+                                Toast.makeText(BroadcastActivity.this, "Message Sent!!!", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     });
 
-                     edtTextMsg.setText("");
+                    edtTextMsg.setText("");
                 }
             }
         });
+
+        if((mAuth.getCurrentUser() != null) && (mAuth.getCurrentUser().getEmail() != null)){
+            if(mAuth.getCurrentUser().getEmail().toString().equals("ema@gmail.com")){
+                scrollView.setVisibility(View.GONE);
+            }
+        }
 
         imgBtnGallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,7 +194,6 @@ public class ChatActivity extends AppCompatActivity {
                 galleryIntent.setType("image/*");
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
-
             }
         });
 
@@ -226,16 +201,15 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 currentPage++;
-               // mList.clear();
+                // mList.clear();
                 itemPos = 0;
                 load_more_messages();
             }
         });
-
     }
 
     public void load_more_messages(){
-        DatabaseReference mRefMessages = mReference.child("Messages").child(mAuth.getCurrentUser().getUid()).child(userId);
+        DatabaseReference mRefMessages = mReference.child("Broadcast");
         Query mQuery = mRefMessages.orderByKey().endAt(lastKey).limitToLast(TOTAL_ITEMS_TO_LOAD);
 
         mQuery.addChildEventListener(new ChildEventListener() {
@@ -283,7 +257,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void load_messages(){
-        DatabaseReference mRefMessages = mReference.child("Messages").child(mAuth.getCurrentUser().getUid()).child(userId);
+        DatabaseReference mRefMessages = mReference.child("Broadcast");
         Query mQuery = mRefMessages.limitToLast(currentPage * TOTAL_ITEMS_TO_LOAD);
         mQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -332,13 +306,11 @@ public class ChatActivity extends AppCompatActivity {
         if(requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK){
             Uri sourceUri = data.getData();
 
-            String pushKey = mReference.child("Messages").child(mAuth.getCurrentUser().getUid()).child(userId).push().getKey();
+            String pushKey = mReference.child("Broadcast").push().getKey();
 
-            final String currentUserRef = "Messages/"+mAuth.getCurrentUser().getUid()+"/"+userId+"/"+pushKey;
-            final String chatUserRef = "Messages/"+userId+"/"+mAuth.getCurrentUser().getUid()+"/"+pushKey;
+            final String broadCastRef = "Broadcast/"+pushKey;
 
-
-            final StorageReference f = mStorageRef.child("Message_Images").child(pushKey+".jpg");
+            final StorageReference f = mStorageRef.child("Broadcast_Images").child(pushKey+".jpg");
 
             f.putFile(sourceUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -356,8 +328,8 @@ public class ChatActivity extends AppCompatActivity {
                             msgAddMap.put("from", mAuth.getCurrentUser().getUid());
 
                             Map msgUserMap = new HashMap();
-                            msgUserMap.put(currentUserRef, msgAddMap);
-                            msgUserMap.put(chatUserRef, msgAddMap);
+                            msgUserMap.put(broadCastRef, msgAddMap);
+
 
                             mReference.updateChildren(msgUserMap, new DatabaseReference.CompletionListener() {
                                 @Override
@@ -368,27 +340,19 @@ public class ChatActivity extends AppCompatActivity {
                                 }
                             });
 
-
-
                         }
                     });
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(ChatActivity.this, "image upload unsuccessful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BroadcastActivity.this, "image upload unsuccessful", Toast.LENGTH_SHORT).show();
                     Log.i("Error, upload photo:", exception.getMessage().toString());
                     Log.i("Error Message,:", exception.getLocalizedMessage().toString());
                 }
             });
 
-
-
-
-
         }
-
-
     }
 
     @Override

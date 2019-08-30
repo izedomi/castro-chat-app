@@ -111,7 +111,7 @@ public class OverviewActivity extends AppCompatActivity {
 
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mViewPagerAdapter.add(chatFragment, "chats");
-        mViewPagerAdapter.add(friendsFragment, "friends");
+        mViewPagerAdapter.add(friendsFragment, "colleagues");
         mViewPagerAdapter.add(requestsFragments, "requests");
         viewPager.setAdapter(mViewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -124,7 +124,7 @@ public class OverviewActivity extends AppCompatActivity {
     public void addMenu(){
         Menu menuProfile = navView.getMenu();
         Menu menuManageUsers = null;
-        if(mAuth.getCurrentUser() != null){
+        if((mAuth.getCurrentUser() != null) && (mAuth.getCurrentUser().getEmail() != null)){
             if(mAuth.getCurrentUser().getEmail().toString().equals("ema@gmail.com")){
                 menuManageUsers = navView.getMenu();
             }
@@ -155,26 +155,26 @@ public class OverviewActivity extends AppCompatActivity {
             dbRef.child("Users").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    profile.clear();
-                    profile.add(dataSnapshot.child("fullname").getValue().toString());
-                    profile.add(dataSnapshot.child("username").getValue().toString());
-                    profile.add(dataSnapshot.child("department").getValue().toString());
-                    profile.add(dataSnapshot.child("rank").getValue().toString());
-                    profile.add(dataSnapshot.child("gender").getValue().toString());
+                    if(dataSnapshot != null){
+                        profile.clear();
+                        profile.add(dataSnapshot.child("fullname").getValue().toString());
+                        profile.add(dataSnapshot.child("username").getValue().toString());
+                        profile.add(dataSnapshot.child("department").getValue().toString());
+                        profile.add(dataSnapshot.child("rank").getValue().toString());
+                        profile.add(dataSnapshot.child("gender").getValue().toString());
 
-                    tvDrawerId.setText(dataSnapshot.child("staff_Id").getValue().toString());
-                    //llDrawerHeaderBg.setBackground(dataSnapshot.child("thumbnail").getValue().toString());
+                        tvDrawerId.setText(dataSnapshot.child("staff_Id").getValue().toString());
+                        //llDrawerHeaderBg.setBackground(dataSnapshot.child("thumbnail").getValue().toString());
 
+                        // navUsername.setText(dataSnapshot.child("staff_Id").getValue().toString());
 
-                    // navUsername.setText(dataSnapshot.child("staff_Id").getValue().toString());
-
-                    Picasso
-                            .get()
-                            .load(dataSnapshot.child("thumbnail").getValue().toString())
-                            .placeholder(R.drawable.user_avatar).
-                            error(R.drawable.user_avatar)
-                            .into(imvDrawerImg);
-
+                        Picasso
+                                .get()
+                                .load(dataSnapshot.child("thumbnail").getValue().toString())
+                                .placeholder(R.drawable.user_avatar).
+                                error(R.drawable.user_avatar)
+                                .into(imvDrawerImg);
+                    }
                 }
 
                 @Override
@@ -292,6 +292,13 @@ public class OverviewActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
+        if((mAuth.getCurrentUser() != null) && (mAuth.getCurrentUser().getEmail() != null)){
+            if(mAuth.getCurrentUser().getEmail().equals("ema@gmail.com")){
+                MenuItem sendBroadcast = menu.findItem(R.id.send_broadcast);
+                sendBroadcast.setVisible(true);
+            }
+        }
+
         //int i = menu.size();
         //Toast.makeText(this, String.valueOf(i), Toast.LENGTH_SHORT).show();
         return true;
@@ -314,8 +321,14 @@ public class OverviewActivity extends AppCompatActivity {
                     finish();
                 break;
             case R.id.all_users:
-                Intent intentSendMsg = new Intent(OverviewActivity.this, AllUsersActivity.class);
+               // Intent intentSendMsg = new Intent(OverviewActivity.this, AllUsersActivity.class);
+                Intent intentSendMsg = new Intent(OverviewActivity.this, BroadcastActivity.class);
                 startActivity(intentSendMsg);
+                break;
+
+            case R.id.send_broadcast:
+                Intent intentBroadcast = new Intent(OverviewActivity.this, SendBroadcastActivity.class);
+                startActivity(intentBroadcast);
                 break;
         }
         return true;

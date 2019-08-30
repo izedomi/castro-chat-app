@@ -6,15 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Activities.AllUsersActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:id="@+id/toolbar"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:background="@color/colorPrimary"
-        android:layout_alignParentTop="true">
+    <include layout="@layout/layout_tool_bar" />
 
-    </androidx.appcompat.widget.Toolbar>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv"
         android:layout_width="match_parent"

@@ -3,7 +3,9 @@ package com.example.castro.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +14,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -30,7 +34,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class AllUsersActivity extends AppCompatActivity {
 
@@ -50,7 +57,7 @@ public class AllUsersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_users);
-        setTitle("Manage Users");
+        //setTitle("Manage Users");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         rcv = (RecyclerView) findViewById(R.id.rcv);
@@ -64,15 +71,26 @@ public class AllUsersActivity extends AppCompatActivity {
         mRefRequests = FirebaseDatabase.getInstance().getReference().child("Requests");
         mAuth = FirebaseAuth.getInstance();
 
+        fetch_users("osezuah winifred", false);
 
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
         rcv.setHasFixedSize(true);
-        rcv.setLayoutManager(new LinearLayoutManager(this));
-        fetch_users();
+        rcv.setLayoutManager(mLayoutManager);
+
+       // find_users("osezuah winifred", true);
 
     }
 
-    public void fetch_users(){
-        Query query = mRefUsers;
+    public void fetch_users(String newText, boolean s){
+        Query query = mRefUsers.orderByChild("fullname");
+        if(s){
+            query = mRefUsers.orderByChild("fullname").startAt("osezuah winifred").endAt("osezuah winifred" + "\uf8ff");
+        }
+
+
+
         //FirebaseDatabase.getInstance().getReference().child("Blog").limitToLast(50);
 
         FirebaseRecyclerOptions<AllUserModel> options =
@@ -91,6 +109,90 @@ public class AllUsersActivity extends AppCompatActivity {
                  h.llMainRow.setVisibility(View.GONE);
                 }
                 else{
+                    h.llMainRow.setVisibility(View.VISIBLE);
+                    h.tvName.setText(allUserModel.getFullname());
+                    h.tvDepartment.setText(allUserModel.getDepartment() + " | " + allUserModel.getRank());
+                    Glide
+                            .with(AllUsersActivity.this)
+                            .load(allUserModel.getImage_url())
+                            .centerCrop()
+                            .placeholder(R.drawable.user_avatar)
+                            .fallback(R.drawable.user_avatar)
+                            .into(h.imvProfile);
+
+
+                    h.llMainRow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            CharSequence[] options = new CharSequence[]{"Open Profile"};
+                            if(mAuth.getCurrentUser().getEmail().equals("ema@gmail.com")){
+                                options = new CharSequence[]{"Open Profile", "Delete User"};
+                            }
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(AllUsersActivity.this);
+                            builder.setTitle("Select Option");
+                            builder.setItems(options, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    switch (i){
+                                        case 0:
+                                            Intent iProfile = new Intent(AllUsersActivity.this, ProfileActivity.class);
+                                            iProfile.putExtra("user_id", userId);
+                                            iProfile.putExtra("action", 0);
+                                            startActivity(iProfile);
+                                            break;
+                                        case 1:
+                                            delete_user(userId);
+                                          /*  Intent iSingle = new Intent(AllUsersActivity.this, ChatActivity.class);
+                                            iSingle.putExtra("user_id", userId);
+                                            startActivity(iSingle);
+                                            */
+                                            break;
+                                    }
+
+                                }
+                            });
+                            builder.show();
+
+                        }
+                    });
+                }
+
+            }
+
+            @NonNull
+            @Override
+            public AllUserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_all_user, parent, false);
+                return new AllUserViewHolder(v);
+            }
+
+        };
+
+        rcv.setAdapter(adapter);
+    }
+
+    public void find_users(String text){
+
+        Query firebaseQ = mRefUsers.orderByChild("fullname").startAt("osezuah winifred").endAt("osezuah winifred" + "\uf8ff");
+
+        FirebaseRecyclerOptions<AllUserModel> options =
+                new FirebaseRecyclerOptions.Builder<AllUserModel>()
+                        .setQuery(firebaseQ, AllUserModel.class)
+                        .build();
+
+        adapter = new FirebaseRecyclerAdapter<AllUserModel, AllUserViewHolder>(options)
+        {
+            @Override
+            protected void onBindViewHolder(@NonNull AllUserViewHolder h, int i, @NonNull AllUserModel allUserModel) {
+                final String userId = getRef(i).getKey();
+
+
+              /*  if(userId.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                    h.llMainRow.setVisibility(View.GONE);
+                }
+                else{*/
                     h.llMainRow.setVisibility(View.VISIBLE);
                     h.tvName.setText(allUserModel.getFullname());
                     h.tvDepartment.setText(allUserModel.getDepartment() + " | " + allUserModel.getRank());
@@ -135,7 +237,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
                         }
                     });
-                }
+               // }
 
             }
 
@@ -145,10 +247,12 @@ public class AllUsersActivity extends AppCompatActivity {
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_all_user, parent, false);
                 return new AllUserViewHolder(v);
             }
+
         };
 
         rcv.setAdapter(adapter);
     }
+
 
     public void delete_user(final String userId){
         delete_from_chats(userId);
@@ -414,5 +518,55 @@ public class AllUsersActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.all_users_menu, menu);
+
+        MenuItem search = menu.findItem(R.id.search);
+        
+       SearchView searchView = (SearchView) search.getActionView();
+       //SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        search(searchView);
+        //return true;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch(id){
+            case R.id.sign_out:
+
+                if(mAuth.getCurrentUser() != null){
+                    DatabaseReference dbRefUsers = mRef.child("Users").child(mAuth.getCurrentUser().getUid());
+                    dbRefUsers.child("online").setValue(ServerValue.TIMESTAMP);
+                }
+                mAuth.signOut();
+                Intent intentContact = new Intent(AllUsersActivity.this, LoginActivity.class);
+                startActivity(intentContact);
+                finish();
+                break;
+        }
+        //return true;
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void search(SearchView searchView){
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                fetch_users(query, true);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                fetch_users(newText, true);
+                return false;
+            }
+        });
     }
 }

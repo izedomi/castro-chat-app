@@ -1,6 +1,7 @@
 package com.example.castro.ViewHolders;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ public class MessagesViewHolder extends RecyclerView.ViewHolder {
     public TextView tvMsgReceiverText;
     public LinearLayout llSenderRow;
     public LinearLayout llReceiverRow;
+    public ImageView imvImgSent;
+    public ImageView imvImgReceived;
 
     public MessagesViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -32,5 +35,7 @@ public class MessagesViewHolder extends RecyclerView.ViewHolder {
         relMsgWrapper = itemView.findViewById(R.id.msg_wrapper);
         llSenderRow = itemView.findViewById(R.id.sender_row);
         llReceiverRow = itemView.findViewById(R.id.receiver_row);
+        imvImgSent = itemView.findViewById(R.id.sender_img);
+        imvImgReceived = itemView.findViewById(R.id.receiver_img);
     }
 }
