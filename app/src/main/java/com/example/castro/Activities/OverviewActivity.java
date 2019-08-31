@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -55,6 +56,7 @@ public class OverviewActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     TextView tvDrawerId;
     TextView tvDrawerEmail;
+    TextView tvBroadcastCount;
     LinearLayout llDrawerHeaderBg;
     CircleImageView imvDrawerImg;
 
@@ -79,11 +81,13 @@ public class OverviewActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         navView = (NavigationView) findViewById(R.id.nav_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        tvBroadcastCount = (TextView) findViewById(R.id.tv_broadcast_count);
 
 
         View headerView = navView.getHeaderView(0);
         tvDrawerId = (TextView) headerView.findViewById(R.id.drawer_profile_id);
         tvDrawerEmail = (TextView) headerView.findViewById(R.id.drawer_profile_email);
+
         imvDrawerImg = (CircleImageView) headerView.findViewById(R.id.drawer_profile_img);
         llDrawerHeaderBg = (LinearLayout) headerView.findViewById(R.id.drawer_profile_bg);
 
@@ -93,7 +97,7 @@ public class OverviewActivity extends AppCompatActivity {
 
 
         addMenu();
-
+        count_broadcast();
 
         //setup navigation drawer
         setSupportActionBar(toolbar);
@@ -209,8 +213,6 @@ public class OverviewActivity extends AppCompatActivity {
         //drawerLayout.closeDrawers();
         drawerLayout.closeDrawer(GravityCompat.START);
     }
-
-
     public void check_if_profile_has_been_setup(){
         DatabaseReference userRef = dbRef.child("Users").child(mAuth.getCurrentUser().getUid());
         userRef.addValueEventListener(new ValueEventListener() {
@@ -251,7 +253,78 @@ public class OverviewActivity extends AppCompatActivity {
             }
         });
     }
+    public void count_broadcast(){
+        DatabaseReference mRefMessages = dbRef.child("Broadcast");
+        mRefMessages.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int i = 0;
+                for(DataSnapshot s: dataSnapshot.getChildren()){
+                   // Log.i("BROADCASTK", s.getKey().toString());
+                   // Log.i("BROADCASTVV", s.getValue().toString());
 
+                    String from= s.child("from").getValue().toString();
+                    long duration = Long.parseLong(s.child("time").getValue().toString());
+
+                   // Log.i("TVV", from);
+                   // Log.i("STVV", String.valueOf(duration));
+
+                    if(from.equals("ADMIN") && how_long_ago(duration) != null){
+                        i++;
+                    }
+
+                }
+
+                Log.i("BROADCASTT", String.valueOf(i));
+                if(i>0){tvBroadcastCount.setText(String.valueOf(i));}
+                else{tvBroadcastCount.setVisibility(View.GONE);}
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public String how_long_ago(long time){
+        final int SECOND_MILLIS = 1000;
+        final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+        final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+        int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+
+        if (time < 1000000000000L) {
+            // if timestamp given in seconds, convert to millis
+            time *= 1000;
+        }
+
+        long now = System.currentTimeMillis();
+        if (time > now || time <= 0) {
+            return null;
+        }
+
+        // TODO: localize
+        final long diff = now - time;
+
+        //3 days
+           /*
+           if (diff < 72 * HOUR_MILLIS) {
+                return "valid";
+            } else {
+                return null;
+            }
+            */
+
+        //3 hrs, 60min = 1hr
+
+        if (diff < 180 * MINUTE_MILLIS){
+            return "valid";
+        } else {
+            return null;
+        }
+
+    }
 
     @Override
     public void onStart() {
@@ -329,6 +402,11 @@ public class OverviewActivity extends AppCompatActivity {
             case R.id.send_broadcast:
                 Intent intentBroadcast = new Intent(OverviewActivity.this, SendBroadcastActivity.class);
                 startActivity(intentBroadcast);
+                break;
+
+            case R.id.broadcast_msg:
+                Intent intentBroadcastMsg = new Intent(OverviewActivity.this, BroadcastActivity.class);
+                startActivity(intentBroadcastMsg);
                 break;
         }
         return true;

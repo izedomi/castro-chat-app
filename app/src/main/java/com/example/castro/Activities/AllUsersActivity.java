@@ -528,14 +528,13 @@ public class AllUsersActivity extends AppCompatActivity {
         adapter.stopListening();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.all_users_menu, menu);
 
         MenuItem search = menu.findItem(R.id.search);
         
-       SearchView searchView = (SearchView) search.getActionView();
+        SearchView searchView = (SearchView) search.getActionView();
        //SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
         search(searchView);
         //return true;

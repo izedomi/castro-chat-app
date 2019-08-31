@@ -10,6 +10,10 @@
         android:id="@+id/send_broadcast"
         android:title="Send Broadcast"
         android:visible="false"/>
+    <item
+        android:id="@+id/broadcast_msg"
+        android:title="Broadcasts"
+        />
 
     <item
         android:id="@+id/sign_out"

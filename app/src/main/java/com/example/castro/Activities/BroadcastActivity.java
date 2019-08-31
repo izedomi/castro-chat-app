@@ -122,13 +122,14 @@ public class BroadcastActivity extends AppCompatActivity {
                 //  Toast.makeText(ChatActivity.this, dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
                 //  Log.i("CHAT ACTIVITY:", dataSnapshot.getValue().toString());
                 String online = dataSnapshot.child("online").getValue().toString();
-                if(online.equals("true")){tvToolbarLastSeen.setText("Online");}
+                tvToolbarLastSeen.setVisibility(View.GONE);
+                /*if(online.equals("true")){tvToolbarLastSeen.setText("Online");}
                 else{
                     TimeAgo timeAgo = new TimeAgo();
                     Long l = Long.parseLong(online);
                     String lastSeen = timeAgo.getTimeAgo(l, getApplicationContext());
                     tvToolbarLastSeen.setText(lastSeen);
-                }
+                }*/
                 //tvToolbarName.setText(dataSnapshot.child("fullname").getValue().toString());
                 Picasso.get().load(dataSnapshot.child("image_url").getValue().toString())
                         .placeholder(R.drawable.user_avatar)

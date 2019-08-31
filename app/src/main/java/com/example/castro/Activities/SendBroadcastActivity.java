@@ -151,6 +151,9 @@ public class SendBroadcastActivity extends AppCompatActivity {
                                     if(databaseError != null){
                                         Log.i("MESSAGE CHAT ERROR", databaseError.getMessage().toString());
                                     }
+                                    else{
+                                        Toast.makeText(SendBroadcastActivity.this, "Message Sent. Image upload successful!", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
 

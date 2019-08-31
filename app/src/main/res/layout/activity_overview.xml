@@ -18,12 +18,22 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:id="@+id/toolbar"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                android:layout_alignParentTop="true"
                 android:background="@color/colorPrimary"
-                android:layout_alignParentTop="true">
+                android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+                <TextView
+                    android:id="@+id/tv_broadcast_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    android:textColor="@color/colorDark"
+                    android:textSize="14sp"
+                    android:background="@drawable/chat_bg_white_rounded"
+                    android:padding="4dp"/>
 
             </androidx.appcompat.widget.Toolbar>
 

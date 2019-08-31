@@ -50,7 +50,7 @@
                 android:id="@+id/toolbar_image"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ehi"
+                android:src="@drawable/user_avatar"
                 android:layout_marginRight="8dp"
                 android:layout_marginVertical="5dp"
                 android:layout_weight="2"/>
