@@ -57,11 +57,12 @@ public class AllUsersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_users);
-        //setTitle("Manage Users");
+        setTitle("All Users");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         rcv = (RecyclerView) findViewById(R.id.rcv);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mRef = FirebaseDatabase.getInstance().getReference();
         mRefUsers = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -84,11 +85,11 @@ public class AllUsersActivity extends AppCompatActivity {
     }
 
     public void fetch_users(String newText, boolean s){
+
         Query query = mRefUsers.orderByChild("fullname");
         if(s){
             query = mRefUsers.orderByChild("fullname").startAt("osezuah winifred").endAt("osezuah winifred" + "\uf8ff");
         }
-
 
 
         //FirebaseDatabase.getInstance().getReference().child("Blog").limitToLast(50);
@@ -104,59 +105,63 @@ public class AllUsersActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull AllUserViewHolder h, int i, @NonNull AllUserModel allUserModel) {
                 final String userId = getRef(i).getKey();
 
+                if(FirebaseAuth.getInstance().getCurrentUser() != null){
+                    if((userId.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) || (!allUserModel.getSetup().equals("1")) ){
+                        h.llMainRow.setVisibility(View.GONE);
+                    }
+                    else{
+                            h.llMainRow.setVisibility(View.VISIBLE);
+                            h.tvName.setText(allUserModel.getFullname());
+                            h.tvDepartment.setText(allUserModel.getDepartment() + " | " + allUserModel.getRank());
+                            Glide
+                                    .with(AllUsersActivity.this)
+                                    .load(allUserModel.getImage_url())
+                                    .centerCrop()
+                                    .placeholder(R.drawable.user_avatar)
+                                    .fallback(R.drawable.user_avatar)
+                                    .into(h.imvProfile);
 
-                if(userId.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                 h.llMainRow.setVisibility(View.GONE);
-                }
-                else{
-                    h.llMainRow.setVisibility(View.VISIBLE);
-                    h.tvName.setText(allUserModel.getFullname());
-                    h.tvDepartment.setText(allUserModel.getDepartment() + " | " + allUserModel.getRank());
-                    Glide
-                            .with(AllUsersActivity.this)
-                            .load(allUserModel.getImage_url())
-                            .centerCrop()
-                            .placeholder(R.drawable.user_avatar)
-                            .fallback(R.drawable.user_avatar)
-                            .into(h.imvProfile);
 
-
-                    h.llMainRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            CharSequence[] options = new CharSequence[]{"Open Profile"};
-                            if(mAuth.getCurrentUser().getEmail().equals("ema@gmail.com")){
-                                options = new CharSequence[]{"Open Profile", "Delete User"};
-                            }
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(AllUsersActivity.this);
-                            builder.setTitle("Select Option");
-                            builder.setItems(options, new DialogInterface.OnClickListener() {
+                            h.llMainRow.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
+                                public void onClick(View view) {
+                                    CharSequence[] options = new CharSequence[]{"Open Profile"};
+                                    if(mAuth.getCurrentUser().getEmail().equals("ema@gmail.com")){
+                                    options = new CharSequence[]{"Open Profile", "Delete User"};
+                                     }
 
-                                    switch (i){
-                                        case 0:
-                                            Intent iProfile = new Intent(AllUsersActivity.this, ProfileActivity.class);
-                                            iProfile.putExtra("user_id", userId);
-                                            iProfile.putExtra("action", 0);
-                                            startActivity(iProfile);
-                                            break;
-                                        case 1:
-                                            delete_user(userId);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(AllUsersActivity.this);
+                                    builder.setTitle("Select Option");
+                                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            switch (i){
+                                                case 0:
+                                                    Intent iProfile = new Intent(AllUsersActivity.this, ProfileActivity.class);
+                                                    iProfile.putExtra("user_id", userId);
+                                                    iProfile.putExtra("action", 0);
+                                                    startActivity(iProfile);
+                                                    break;
+                                                case 1:
+                                                    delete_user(userId);
+
                                           /*  Intent iSingle = new Intent(AllUsersActivity.this, ChatActivity.class);
                                             iSingle.putExtra("user_id", userId);
                                             startActivity(iSingle);
                                             */
-                                            break;
-                                    }
+                                                    break;
+                                            }
+
+                                        }
+                                    });
+                                    builder.show();
 
                                 }
                             });
-                            builder.show();
 
-                        }
-                    });
+                    }
+
                 }
 
             }
@@ -270,15 +275,15 @@ public class AllUsersActivity extends AppCompatActivity {
 
                 for(DataSnapshot d: dataSnapshot.getChildren()){
 
-                    Log.i("dataDDDD", d.getKey().toString());
-                    Log.i("dataDDD", d.getValue().toString());
+                    Log.i("dataDDDc", d.getKey().toString());
+                    Log.i("dataDDc", d.getValue().toString());
                    // Log.i("dataDD", d.getChildren().toString());
 
                     for(DataSnapshot e: d.getChildren()){
                         if(e.getKey().toString().equals(userId)){
-                            Log.i("dataEEEE", e.getKey().toString());
-                            Log.i("dataEEE", e.getValue().toString());
-                            mRefChat.child(d.getKey()).child(e.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            Log.i("dataEEEc", e.getKey().toString());
+                            Log.i("dataEEc", e.getValue().toString());
+                            mRefChat.child(d.getKey()).child(userId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
 
@@ -329,14 +334,14 @@ public class AllUsersActivity extends AppCompatActivity {
 
                 for(DataSnapshot d: dataSnapshot.getChildren()){
 
-                    Log.i("dataDDDD", d.getKey().toString());
-                    Log.i("dataDDD", d.getValue().toString());
+                    Log.i("dataDDDr", d.getKey().toString());
+                    Log.i("dataDDr", d.getValue().toString());
                     // Log.i("dataDD", d.getChildren().toString());
 
                     for(DataSnapshot e: d.getChildren()){
                         if(e.getKey().toString().equals(userId)){
-                            Log.i("dataEEEE", e.getKey().toString());
-                            Log.i("dataEEE", e.getValue().toString());
+                            Log.i("dataEEEr", e.getKey().toString());
+                            Log.i("dataEEr", e.getValue().toString());
                             mRefRequests.child(d.getKey()).child(e.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -388,14 +393,14 @@ public class AllUsersActivity extends AppCompatActivity {
 
                 for(DataSnapshot d: dataSnapshot.getChildren()){
 
-                    Log.i("dataDDDD", d.getKey().toString());
-                    Log.i("dataDDD", d.getValue().toString());
+                    Log.i("dataDDDm", d.getKey().toString());
+                    Log.i("dataDDm", d.getValue().toString());
                     // Log.i("dataDD", d.getChildren().toString());
 
                     for(DataSnapshot e: d.getChildren()){
                         if(e.getKey().toString().equals(userId)){
-                            Log.i("dataEEEE", e.getKey().toString());
-                            Log.i("dataEEE", e.getValue().toString());
+                            Log.i("dataEEEm", e.getKey().toString());
+                            Log.i("dataEEm", e.getValue().toString());
                             mRefMessages.child(d.getKey()).child(e.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -446,14 +451,14 @@ public class AllUsersActivity extends AppCompatActivity {
 
                 for(DataSnapshot d: dataSnapshot.getChildren()){
 
-                    Log.i("dataDDDD", d.getKey().toString());
-                    Log.i("dataDDD", d.getValue().toString());
+                    Log.i("dataDDDf", d.getKey().toString());
+                    Log.i("dataDDf", d.getValue().toString());
                     // Log.i("dataDD", d.getChildren().toString());
 
                     for(DataSnapshot e: d.getChildren()){
                         if(e.getKey().toString().equals(userId)){
-                            Log.i("dataEEEE", e.getKey().toString());
-                            Log.i("dataEEE", e.getValue().toString());
+                            Log.i("dataEEEf", e.getKey().toString());
+                            Log.i("dataEEf", e.getValue().toString());
                             mRefFriends.child(d.getKey()).child(e.getKey()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -503,6 +508,9 @@ public class AllUsersActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(AllUsersActivity.this, "user deleted successfully", Toast.LENGTH_SHORT).show();
+                    //refresh current activity
+                    finish();
+                    startActivity(getIntent());
                 }
             }
         });
@@ -519,6 +527,7 @@ public class AllUsersActivity extends AppCompatActivity {
         super.onStop();
         adapter.stopListening();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

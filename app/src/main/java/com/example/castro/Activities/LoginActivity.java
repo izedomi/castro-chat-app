@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     TextView tvSignup;
+    TextView tvForgotPassword;
     ProgressDialog loginDialog;
 
     TextInputEditText edtEmail;
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         tvSignup = (TextView) findViewById(R.id.tv_signup);
         edtEmail = (TextInputEditText) findViewById(R.id.edt_email);
         edtPassword = (TextInputEditText) findViewById(R.id.edt_password);
+        tvForgotPassword = (TextView) findViewById(R.id.tv_forgot_password);
         btnLogin = (Button) findViewById(R.id.btn_login);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -67,6 +69,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent iSignup = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(iSignup);
+            }
+        });
+
+        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent iforgotPassword = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(iforgotPassword);
             }
         });
 

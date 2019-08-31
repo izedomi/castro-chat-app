@@ -136,6 +136,7 @@ public class ChatFragment extends Fragment {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         String data = dataSnapshot.child("message").getValue().toString();
+                        if(data.isEmpty() || data == null){h.tvMsg.setText("");}
                         h.tvMsg.setText(data);
                         if(model.isSeen()){
                             h.tvMsg.setTypeface(h.tvMsg.getTypeface(), Typeface.BOLD);
@@ -170,7 +171,7 @@ public class ChatFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.getValue() != null){
-                            Log.i("aaa", dataSnapshot.toString());
+                            //Log.i("aaa", dataSnapshot.toString());
                             name = dataSnapshot.child("fullname").getValue().toString();
                             image = dataSnapshot.child("thumbnail").getValue().toString();
 

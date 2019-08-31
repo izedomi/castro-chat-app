@@ -54,7 +54,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
     @Override
     public void onBindViewHolder(final @NonNull MessagesViewHolder h, int position) {
 
-        String from = mList.get(position).getFrom();
+        final String from = mList.get(position).getFrom();
         String msgText = mList.get(position).getMessage();
         Long msgTime = mList.get(position).getTime();
         String msgType = mList.get(position).getType();
@@ -72,10 +72,28 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
                         if(dataSnapshot.child("thumbnail").getValue().toString() != null){
                         String thumbnail = dataSnapshot.child("thumbnail").getValue().toString();
                         //tvToolbarName.setText(dataSnapshot.child("fullname").getValue().toString());
-                        Picasso.get().load(thumbnail)
-                                .placeholder(R.drawable.user_avatar)
-                                .error(R.drawable.user_avatar)
-                                .into(h.imvMsgReceiver);
+                            if(status){
+                                if(from.equals(mAuth.getCurrentUser().getUid())){
+                                    Picasso.get().load(thumbnail)
+                                            .placeholder(R.drawable.user_avatar)
+                                            .error(R.drawable.user_avatar)
+                                            .into(h.imvMsgSender);
+                                }
+                                else{
+                                    Picasso.get().load(thumbnail)
+                                            .placeholder(R.drawable.user_avatar)
+                                            .error(R.drawable.user_avatar)
+                                            .into(h.imvMsgReceiver);
+                                }
+
+                            }
+                            else{
+                                Picasso.get().load(thumbnail)
+                                        .placeholder(R.drawable.user_avatar)
+                                        .error(R.drawable.user_avatar)
+                                        .into(h.imvMsgReceiver);
+                            }
+
                         };
 
                     }

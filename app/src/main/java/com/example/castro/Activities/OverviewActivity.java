@@ -70,7 +70,7 @@ public class OverviewActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-       // mAuth.signOut();
+        //mAuth.signOut();
         mDatabase = FirebaseDatabase.getInstance();
         dbRef = mDatabase.getReference();
 
@@ -321,8 +321,8 @@ public class OverviewActivity extends AppCompatActivity {
                     finish();
                 break;
             case R.id.all_users:
-               // Intent intentSendMsg = new Intent(OverviewActivity.this, AllUsersActivity.class);
-                Intent intentSendMsg = new Intent(OverviewActivity.this, BroadcastActivity.class);
+                Intent intentSendMsg = new Intent(OverviewActivity.this, AllUsersActivity.class);
+                //Intent intentSendMsg = new Intent(OverviewActivity.this, BroadcastActivity.class);
                 startActivity(intentSendMsg);
                 break;
 

@@ -66,7 +66,7 @@ public class RequestsFragments extends Fragment {
                 //Toast.makeText(getContext(), dataSnapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
                // Log.i("Friends Request: ", dataSnapshot.getValue().toString());
                 mData.clear();
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
                 if(dataSnapshot.hasChild(mAuth.getCurrentUser().getUid())){
                     Log.i("REQUIST ID:",  "yes");
 
@@ -77,8 +77,8 @@ public class RequestsFragments extends Fragment {
                         mReferenceRequestType.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                mData.clear();
-                                adapter.notifyDataSetChanged();
+                                //mData.clear();
+                                //adapter.notifyDataSetChanged();
                                 if(dataSnapshot.getValue() != null){
                                     if(dataSnapshot.hasChild("request_type")){
                                         if(dataSnapshot.child("request_type").getValue().toString().equals("recieved")){
@@ -91,8 +91,8 @@ public class RequestsFragments extends Fragment {
                                             mRefUsers.addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    mData.clear();
-                                                    adapter.notifyDataSetChanged();
+                                                    //mData.clear();
+                                                    //adapter.notifyDataSetChanged();
                                                     AllUserModel requests =  dataSnapshot.getValue(AllUserModel.class);
                                                     // mData.add(new AllUserModel(dataSnapshot.child("")))
                                                     mData.add(requests);

@@ -146,10 +146,27 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mReference.child("Chats").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        Map chatAddMap = new HashMap();
+        chatAddMap.put("seen", false);
+        chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
+
+        Map chatUserMap = new HashMap();
+        chatUserMap.put("Chats/"+mAuth.getCurrentUser().getUid()+"/"+userId, chatAddMap);
+        chatUserMap.put("Chats/"+userId+"/"+mAuth.getCurrentUser().getUid(), chatAddMap);
+
+        mReference.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if(databaseError != null){
+                    Log.i("CHAT LOG ERROR", databaseError.getMessage().toString());
+                }
+            }
+        });
+
+      /*  mReference.child("Chats").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.hasChild(userId)){
+               // if(!dataSnapshot.hasChild(userId)){
 
                     Map chatAddMap = new HashMap();
                     chatAddMap.put("seen", false);
@@ -167,7 +184,7 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         }
                     });
-                }
+               // }
             }
 
             @Override
@@ -175,6 +192,9 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
+        */
+
 
         imgBtnSendMsg.setOnClickListener(new View.OnClickListener() {
             @Override
