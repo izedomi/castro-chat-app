@@ -40,6 +40,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
         this.mList = mList;
         this.mCxt = cxt;
         this.status = s;
+
     }
 
     @NonNull
@@ -53,7 +54,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
 
     @Override
     public void onBindViewHolder(final @NonNull MessagesViewHolder h, int position) {
-
+        Log.i("yyy", String.valueOf(this.mList.size()));
         final String from = mList.get(position).getFrom();
         String msgText = mList.get(position).getMessage();
         Long time = mList.get(position).getTime();

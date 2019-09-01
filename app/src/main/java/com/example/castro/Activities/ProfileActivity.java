@@ -121,7 +121,7 @@ public class ProfileActivity extends AppCompatActivity {
                         dataSnapshot.child("department").getValue().toString() + " | "
                                 + dataSnapshot.child("rank").getValue().toString());
                 final String imageUrl = dataSnapshot.child("image_url").getValue().toString();
-                //tvEmail.setText(mAuth.getCurrentUser().getEmail().toString());
+                tvEmail.setText(dataSnapshot.child("email").getValue().toString());
                 tvGender.setText(dataSnapshot.child("gender").getValue().toString());
 
                 Picasso.get().load(imageUrl)

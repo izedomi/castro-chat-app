@@ -106,7 +106,7 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    private void signup_user(String email, String password, final String staffId) {
+    private void signup_user(final String email, String password, final String staffId) {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -118,6 +118,7 @@ public class SignupActivity extends AppCompatActivity {
                             userDetails.put("staff_Id", staffId);
                             userDetails.put("fullname", "");
                             userDetails.put("username", "");
+                            userDetails.put("email", email);
                             userDetails.put("image_url", "default");
                             userDetails.put("thumbnail", "default");
                             userDetails.put("rank", "");

@@ -9,23 +9,14 @@ public class AllUserModel {
     String rank;
     String image_url;
     String gender;
-    String staff_id;
+    String staff_Id;
     String username;
     String setup;
+    String device_token;
+    String email;
+
 
     public AllUserModel(){}
-
-    public AllUserModel(String thumbnail, String fullname, String department, String rank, String image_url, String gender, String staff_id, String username, String setup) {
-        this.thumbnail = thumbnail;
-        this.fullname = fullname;
-        this.department = department;
-        this.rank = rank;
-        this.image_url = image_url;
-        this.gender = gender;
-        this.staff_id = staff_id;
-        this.username = username;
-        this.setup = setup;
-    }
 
     public String getThumbnail() {
         return thumbnail;
@@ -75,12 +66,12 @@ public class AllUserModel {
         this.gender = gender;
     }
 
-    public String getStaff_id() {
-        return staff_id;
+    public String getStaff_Id() {
+        return staff_Id;
     }
 
-    public void setStaff_id(String staff_id) {
-        this.staff_id = staff_id;
+    public void setStaff_Id(String staff_Id) {
+        this.staff_Id = staff_Id;
     }
 
     public String getUsername() {
@@ -99,7 +90,33 @@ public class AllUserModel {
         this.setup = setup;
     }
 
+    public String getDevice_token() {
+        return device_token;
+    }
 
+    public void setDevice_token(String device_token) {
+        this.device_token = device_token;
+    }
 
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public AllUserModel(String thumbnail, String fullname, String department, String rank, String image_url, String gender, String staff_Id, String username, String setup, String device_token, String email) {
+        this.thumbnail = thumbnail;
+        this.fullname = fullname;
+        this.department = department;
+        this.rank = rank;
+        this.image_url = image_url;
+        this.gender = gender;
+        this.staff_Id = staff_Id;
+        this.username = username;
+        this.setup = setup;
+        this.device_token = device_token;
+        this.email = email;
+    }
 }

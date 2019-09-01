@@ -1,6 +1,7 @@
 package com.example.castro.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.castro.Adapters.AllUsersRecyclerAdapter;
 import com.example.castro.Models.AllUserModel;
 import com.example.castro.R;
 import com.example.castro.ViewHolders.AllUserViewHolder;
@@ -29,6 +31,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,7 +53,11 @@ public class AllUsersActivity extends AppCompatActivity {
     DatabaseReference mRefMessages;
     DatabaseReference mRefRequests;
     FirebaseAuth mAuth;
-    private FirebaseRecyclerAdapter adapter;
+    //private FirebaseRecyclerAdapter adapter;
+    AllUsersRecyclerAdapter adapter;
+    ArrayList<AllUserModel> mList;
+    ArrayList<String> mKeys;
+
 
 
     @Override
@@ -64,19 +71,25 @@ public class AllUsersActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mList = new ArrayList<>();
+        mKeys = new ArrayList<>();
+        mAuth = FirebaseAuth.getInstance();
         mRef = FirebaseDatabase.getInstance().getReference();
         mRefUsers = FirebaseDatabase.getInstance().getReference().child("Users");
         mRefChat = FirebaseDatabase.getInstance().getReference().child("Chats");
         mRefFriends = FirebaseDatabase.getInstance().getReference().child("Friends");
         mRefMessages = FirebaseDatabase.getInstance().getReference().child("Messages");
         mRefRequests = FirebaseDatabase.getInstance().getReference().child("Requests");
-        mAuth = FirebaseAuth.getInstance();
 
-        fetch_users("osezuah winifred", false);
+
+        //fetch_users("osezuah winifred", false);
+
+        adapter = new AllUsersRecyclerAdapter(AllUsersActivity.this, mList, mKeys);
+        load_users();
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setReverseLayout(true);
-        mLayoutManager.setStackFromEnd(true);
+       // mLayoutManager.setReverseLayout(true);
+       // mLayoutManager.setStackFromEnd(true);
         rcv.setHasFixedSize(true);
         rcv.setLayoutManager(mLayoutManager);
 
@@ -86,7 +99,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
     public void fetch_users(String newText, boolean s){
 
-        Query query = mRefUsers.orderByChild("fullname");
+   /*     Query query = mRefUsers.orderByChild("fullname");
         if(s){
             query = mRefUsers.orderByChild("fullname").startAt("osezuah winifred").endAt("osezuah winifred" + "\uf8ff");
         }
@@ -146,10 +159,10 @@ public class AllUsersActivity extends AppCompatActivity {
                                                 case 1:
                                                     delete_user(userId);
 
-                                          /*  Intent iSingle = new Intent(AllUsersActivity.this, ChatActivity.class);
+                                         */ /*  Intent iSingle = new Intent(AllUsersActivity.this, ChatActivity.class);
                                             iSingle.putExtra("user_id", userId);
                                             startActivity(iSingle);
-                                            */
+                                            *//*
                                                     break;
                                             }
 
@@ -162,7 +175,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
                     }
 
-                }
+                }**
 
             }
 
@@ -176,86 +189,42 @@ public class AllUsersActivity extends AppCompatActivity {
         };
 
         rcv.setAdapter(adapter);
+
+        */
     }
 
-    public void find_users(String text){
-
-        Query firebaseQ = mRefUsers.orderByChild("fullname").startAt("osezuah winifred").endAt("osezuah winifred" + "\uf8ff");
-
-        FirebaseRecyclerOptions<AllUserModel> options =
-                new FirebaseRecyclerOptions.Builder<AllUserModel>()
-                        .setQuery(firebaseQ, AllUserModel.class)
-                        .build();
-
-        adapter = new FirebaseRecyclerAdapter<AllUserModel, AllUserViewHolder>(options)
-        {
+    public void load_users(){
+        mList.clear();
+        mKeys.clear();
+        mRefUsers.addValueEventListener(new ValueEventListener() {
             @Override
-            protected void onBindViewHolder(@NonNull AllUserViewHolder h, int i, @NonNull AllUserModel allUserModel) {
-                final String userId = getRef(i).getKey();
-
-
-              /*  if(userId.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                    h.llMainRow.setVisibility(View.GONE);
-                }
-                else{*/
-                    h.llMainRow.setVisibility(View.VISIBLE);
-                    h.tvName.setText(allUserModel.getFullname());
-                    h.tvDepartment.setText(allUserModel.getDepartment() + " | " + allUserModel.getRank());
-                    Glide
-                            .with(AllUsersActivity.this)
-                            .load(allUserModel.getImage_url())
-                            .centerCrop()
-                            .placeholder(R.drawable.user_avatar)
-                            .fallback(R.drawable.user_avatar)
-                            .into(h.imvProfile);
-
-
-                    h.llMainRow.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            CharSequence[] options = new CharSequence[]{"Open Profile", "Delete User"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(AllUsersActivity.this);
-                            builder.setTitle("Select Option");
-                            builder.setItems(options, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                    switch (i){
-                                        case 0:
-                                            Intent iProfile = new Intent(AllUsersActivity.this, ProfileActivity.class);
-                                            iProfile.putExtra("user_id", userId);
-                                            iProfile.putExtra("action", 0);
-                                            startActivity(iProfile);
-                                            break;
-                                        case 1:
-                                            delete_user(userId);
-                                          /*  Intent iSingle = new Intent(AllUsersActivity.this, ChatActivity.class);
-                                            iSingle.putExtra("user_id", userId);
-                                            startActivity(iSingle);
-                                            */
-                                            break;
-                                    }
-
-                                }
-                            });
-                            builder.show();
-
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               // AllUserModel u = dataSnapshot.getValue(AllUserModel.class);
+                //mList.add(dataSnapshot.getValue(AllUserModel.class));
+                for(DataSnapshot s : dataSnapshot.getChildren()){
+                    if(mAuth.getCurrentUser() != null){
+                        if(!s.getKey().toString().equals(mAuth.getCurrentUser().getUid())){
+                            mKeys.add(s.getKey().toString());
+                            mList.add(s.getValue(AllUserModel.class));
                         }
-                    });
-               // }
+                    }
+                }
 
+                Log.i("c", String.valueOf(mList.size()));
+                Log.i("cc", String.valueOf(mKeys.size()));
+                Log.i("ccc", dataSnapshot.getValue().toString());
+                adapter.notifyDataSetChanged();
             }
 
-            @NonNull
             @Override
-            public AllUserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_all_user, parent, false);
-                return new AllUserViewHolder(v);
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        };
+            }
+        });
 
         rcv.setAdapter(adapter);
+
+
     }
 
 
@@ -265,7 +234,6 @@ public class AllUsersActivity extends AppCompatActivity {
         delete_from_messages(userId);
         delete_from_friends(userId);
         delete_from_users(userId);
-
     }
 
     public void delete_from_chats(final String userId){
@@ -519,13 +487,13 @@ public class AllUsersActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+       // adapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
+       // adapter.stopListening();
     }
 
     @Override
@@ -566,14 +534,25 @@ public class AllUsersActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                fetch_users(query, true);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                fetch_users(newText, true);
-                return false;
+                newText=newText.toLowerCase();
+                ArrayList<AllUserModel> newList= new ArrayList<>();
+                ArrayList<String> newKeys = new ArrayList<>();
+                int x = 0;
+                for (AllUserModel m : mList){
+                    String mlist = m.getFullname().toLowerCase();
+                    if (mlist.contains(newText)){
+                        newList.add(m);
+                        newKeys.add(mKeys.get(x));
+                    }
+                    x++;
+                }
+                adapter.setFilter(newList, newKeys);
+                return true;
             }
         });
     }
