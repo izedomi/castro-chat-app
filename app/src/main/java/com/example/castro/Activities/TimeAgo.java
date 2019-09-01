@@ -29,7 +29,7 @@ public class TimeAgo extends Application {
         } else if (diff < 2 * MINUTE_MILLIS) {
             return "a minute ago";
         } else if (diff < 50 * MINUTE_MILLIS) {
-            return diff / MINUTE_MILLIS + " minutes ago";
+            return diff / MINUTE_MILLIS + "m ago";
         } else if (diff < 90 * MINUTE_MILLIS) {
             return "an hour ago";
         } else if (diff < 24 * HOUR_MILLIS) {

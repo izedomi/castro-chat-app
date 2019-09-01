@@ -56,11 +56,11 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
 
         final String from = mList.get(position).getFrom();
         String msgText = mList.get(position).getMessage();
-        Long msgTime = mList.get(position).getTime();
+        Long time = mList.get(position).getTime();
         String msgType = mList.get(position).getType();
 
         TimeAgo timeAgo = new TimeAgo();
-        String lastSeen = timeAgo.getTimeAgo(msgTime, mCxt);
+        String msgTime = timeAgo.getTimeAgo(time, mCxt);
 
         if(!from.equals("ADMIN")){
             mRef.child("Users").child(from).addValueEventListener(new ValueEventListener() {
@@ -73,19 +73,20 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
                         String thumbnail = dataSnapshot.child("thumbnail").getValue().toString();
                         //tvToolbarName.setText(dataSnapshot.child("fullname").getValue().toString());
                             if(status){
-                                if(from.equals(mAuth.getCurrentUser().getUid())){
-                                    Picasso.get().load(thumbnail)
-                                            .placeholder(R.drawable.user_avatar)
-                                            .error(R.drawable.user_avatar)
-                                            .into(h.imvMsgSender);
+                                if(mAuth.getCurrentUser() != null){
+                                    if(from.equals(mAuth.getCurrentUser().getUid())){
+                                        Picasso.get().load(thumbnail)
+                                                .placeholder(R.drawable.user_avatar)
+                                                .error(R.drawable.user_avatar)
+                                                .into(h.imvMsgSender);
+                                    }
+                                    else{
+                                        Picasso.get().load(thumbnail)
+                                                .placeholder(R.drawable.user_avatar)
+                                                .error(R.drawable.user_avatar)
+                                                .into(h.imvMsgReceiver);
+                                    }
                                 }
-                                else{
-                                    Picasso.get().load(thumbnail)
-                                            .placeholder(R.drawable.user_avatar)
-                                            .error(R.drawable.user_avatar)
-                                            .into(h.imvMsgReceiver);
-                                }
-
                             }
                             else{
                                 Picasso.get().load(thumbnail)
@@ -93,11 +94,8 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
                                         .error(R.drawable.user_avatar)
                                         .into(h.imvMsgReceiver);
                             }
-
                         };
-
                     }
-
                 }
 
                 @Override
@@ -112,6 +110,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
         if(status){
             if(msgType.equals("text")){
                 if(from.equals(mAuth.getCurrentUser().getUid())){
+                    h.tvSenderTime.setText(msgTime);
                     h.tvMsgSenderText.setVisibility(View.VISIBLE);
                     h.tvMsgSenderText.setText(msgText);
                     h.imvImgSent.setVisibility(View.GONE);
@@ -122,6 +121,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
                 else{
                     h.tvMsgReceiverText.setVisibility(View.VISIBLE);
                     h.tvMsgReceiverText.setText(msgText);
+                    h.tvReceiverTime.setText(msgTime);
                     h.imvImgReceived.setVisibility(View.GONE);
                     h.llReceiverRow.setVisibility(View.VISIBLE);
                     h.llSenderRow.setVisibility(View.GONE);
@@ -130,6 +130,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
             }
             else{
                 if(from.equals(mAuth.getCurrentUser().getUid())){
+                    h.tvSenderTime.setText(msgTime);
                     h.tvMsgSenderText.setVisibility(View.GONE);
                     h.imvImgSent.setVisibility(View.VISIBLE);
                     Picasso.get().load(msgText).placeholder(R.drawable.user_avatar).into(h.imvImgSent);
@@ -141,6 +142,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
                     h.tvMsgReceiverText.setVisibility(View.GONE);
                     h.imvImgReceived.setVisibility(View.VISIBLE);
                     Picasso.get().load(msgText).placeholder(R.drawable.user_avatar).into(h.imvImgReceived);
+                    h.tvReceiverTime.setText(msgTime);
                     h.llReceiverRow.setVisibility(View.VISIBLE);
                     h.llSenderRow.setVisibility(View.GONE);
 
@@ -152,6 +154,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
         if(!status){
             if(msgType.equals("text")){
                 if(from.equals("ADMIN")){
+                    h.tvSenderTime.setText(msgTime);
                     h.tvMsgSenderText.setVisibility(View.VISIBLE);
                     h.tvMsgSenderText.setText(msgText);
                     h.imvImgSent.setVisibility(View.GONE);
@@ -162,6 +165,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
                 else{
                     h.tvMsgReceiverText.setVisibility(View.VISIBLE);
                     h.tvMsgReceiverText.setText(msgText);
+                    h.tvReceiverTime.setText(msgTime);
                     h.imvImgReceived.setVisibility(View.GONE);
                     h.llReceiverRow.setVisibility(View.VISIBLE);
                     h.llSenderRow.setVisibility(View.GONE);
@@ -172,6 +176,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
                 if(from.equals("ADMIN")){
                     h.tvMsgSenderText.setVisibility(View.GONE);
                     h.imvImgSent.setVisibility(View.VISIBLE);
+                    h.tvSenderTime.setText(msgTime);
                     Picasso.get().load(msgText).placeholder(R.drawable.user_avatar).error(R.drawable.user_avatar).into(h.imvImgSent);
                     h.llSenderRow.setVisibility(View.VISIBLE);
                     h.llReceiverRow.setVisibility(View.GONE);
@@ -180,6 +185,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessagesViewHo
                 else{
                     h.tvMsgReceiverText.setVisibility(View.GONE);
                     h.imvImgReceived.setVisibility(View.VISIBLE);
+                    h.tvReceiverTime.setText(msgTime);
                     Picasso.get().load(msgText).placeholder(R.drawable.user_avatar).error(R.drawable.user_avatar).into(h.imvImgReceived);
                     h.llReceiverRow.setVisibility(View.VISIBLE);
                     h.llSenderRow.setVisibility(View.GONE);

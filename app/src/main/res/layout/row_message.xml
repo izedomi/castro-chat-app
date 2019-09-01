@@ -40,6 +40,14 @@
                     android:layout_marginHorizontal="8dp"
                     android:background="@drawable/bg_friend_chat"
                     android:scaleType="centerCrop"/>
+                <TextView
+                    android:id="@+id/sender_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="02:23pm"
+                    android:layout_marginHorizontal="12dp"
+                    android:textSize="11sp"/>
 
             </LinearLayout>
 
@@ -76,6 +84,14 @@
                     android:layout_marginHorizontal="8dp"
                     android:background="@drawable/bg_friend_chat"
                     android:scaleType="centerCrop"/>
+                <TextView
+                    android:id="@+id/receiver_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorDark"
+                    android:text="02:23pm"
+                    android:layout_marginHorizontal="12dp"
+                    android:textSize="11sp"/>
             </LinearLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView

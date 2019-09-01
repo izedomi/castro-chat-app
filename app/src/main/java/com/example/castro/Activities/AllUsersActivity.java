@@ -57,7 +57,7 @@ public class AllUsersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_users);
-        setTitle("All Users");
+        setTitle("Colleagues");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         rcv = (RecyclerView) findViewById(R.id.rcv);

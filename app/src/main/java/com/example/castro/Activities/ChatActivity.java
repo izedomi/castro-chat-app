@@ -108,8 +108,8 @@ public class ChatActivity extends AppCompatActivity {
 
         userId = getIntent().getStringExtra("user_id");
 
-        Toast.makeText(this, mAuth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
-        Log.i("jjj", mAuth.getCurrentUser().getUid());
+        //Toast.makeText(this, mAuth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();
+        //Log.i("jjj", mAuth.getCurrentUser().getUid());
         //dbRefUsers.child("online").setValue(ServerValue.TIMESTAMP);
 
         rcv.setHasFixedSize(true);

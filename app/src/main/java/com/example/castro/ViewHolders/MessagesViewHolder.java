@@ -24,6 +24,8 @@ public class MessagesViewHolder extends RecyclerView.ViewHolder {
     public LinearLayout llReceiverRow;
     public ImageView imvImgSent;
     public ImageView imvImgReceived;
+    public TextView tvSenderTime;
+    public TextView tvReceiverTime;
 
     public MessagesViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -37,5 +39,7 @@ public class MessagesViewHolder extends RecyclerView.ViewHolder {
         llReceiverRow = itemView.findViewById(R.id.receiver_row);
         imvImgSent = itemView.findViewById(R.id.sender_img);
         imvImgReceived = itemView.findViewById(R.id.receiver_img);
+        tvSenderTime = itemView.findViewById(R.id.sender_time);
+        tvReceiverTime = itemView.findViewById(R.id.receiver_time);
     }
 }
