@@ -1,5 +1,6 @@
 package com.example.castro.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -370,7 +371,7 @@ public class AllUsersRecyclerAdapter extends RecyclerView.Adapter<AllUserViewHol
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
 
                 if(dataSnapshot.hasChild(userId)){
-                    mRefRequests.child(userId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    mRefFriends.child(userId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
@@ -396,9 +397,8 @@ public class AllUsersRecyclerAdapter extends RecyclerView.Adapter<AllUserViewHol
                     Toast.makeText(mCxt, "user deleted successfully", Toast.LENGTH_SHORT).show();
 
                     //refresh current activity
-                    //mCxt.finish();
-                    //mCxt.startActivity(getIntent());
-
+                    ((Activity)mCxt).finish();
+                    ((Activity)mCxt).getIntent();
                 }
             }
         });

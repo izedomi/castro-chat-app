@@ -202,8 +202,10 @@ public class AllUsersActivity extends AppCompatActivity {
                // AllUserModel u = dataSnapshot.getValue(AllUserModel.class);
                 //mList.add(dataSnapshot.getValue(AllUserModel.class));
                 for(DataSnapshot s : dataSnapshot.getChildren()){
+
+                    Log.i("MMM", s.child("setup").getValue().toString());
                     if(mAuth.getCurrentUser() != null){
-                        if(!s.getKey().toString().equals(mAuth.getCurrentUser().getUid())){
+                        if(!s.getKey().toString().equals(mAuth.getCurrentUser().getUid()) && s.child("setup").getValue().toString().equals("1")){
                             mKeys.add(s.getKey().toString());
                             mList.add(s.getValue(AllUserModel.class));
                         }

@@ -8,7 +8,7 @@
     android:paddingLeft="25dp"
     android:paddingBottom="16dp"
     android:gravity="bottom"
-    android:background="@drawable/header_bg2"
+    android:background="@drawable/bg1"
     android:alpha="1">
 
     <de.hdodenhof.circleimageview.CircleImageView

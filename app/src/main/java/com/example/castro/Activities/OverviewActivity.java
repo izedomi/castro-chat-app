@@ -160,24 +160,27 @@ public class OverviewActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(dataSnapshot != null){
-                        profile.clear();
-                        profile.add(dataSnapshot.child("fullname").getValue().toString());
-                        profile.add(dataSnapshot.child("username").getValue().toString());
-                        profile.add(dataSnapshot.child("department").getValue().toString());
-                        profile.add(dataSnapshot.child("rank").getValue().toString());
-                        profile.add(dataSnapshot.child("gender").getValue().toString());
+                        if(dataSnapshot.hasChild("staff_Id") && dataSnapshot.hasChild("email")){
+                            profile.clear();
+                            profile.add(dataSnapshot.child("fullname").getValue().toString());
+                            profile.add(dataSnapshot.child("username").getValue().toString());
+                            profile.add(dataSnapshot.child("department").getValue().toString());
+                            profile.add(dataSnapshot.child("rank").getValue().toString());
+                            profile.add(dataSnapshot.child("gender").getValue().toString());
 
-                        tvDrawerId.setText(dataSnapshot.child("staff_Id").getValue().toString());
-                        //llDrawerHeaderBg.setBackground(dataSnapshot.child("thumbnail").getValue().toString());
+                            tvDrawerId.setText(dataSnapshot.child("staff_Id").getValue().toString());
+                            //llDrawerHeaderBg.setBackground(dataSnapshot.child("thumbnail").getValue().toString());
 
-                        // navUsername.setText(dataSnapshot.child("staff_Id").getValue().toString());
+                            // navUsername.setText(dataSnapshot.child("staff_Id").getValue().toString());
 
-                        Picasso
-                                .get()
-                                .load(dataSnapshot.child("thumbnail").getValue().toString())
-                                .placeholder(R.drawable.user_avatar).
-                                error(R.drawable.user_avatar)
-                                .into(imvDrawerImg);
+                            Picasso
+                                    .get()
+                                    .load(dataSnapshot.child("thumbnail").getValue().toString())
+                                    .placeholder(R.drawable.user_avatar).
+                                    error(R.drawable.user_avatar)
+                                    .into(imvDrawerImg);
+                        }
+
                     }
                 }
 
