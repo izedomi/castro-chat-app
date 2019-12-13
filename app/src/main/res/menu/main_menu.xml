@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/all_users"
-        android:title="Find Colleagues" />
+        android:title="Add Colleagues" />
 
     <item
         android:id="@+id/send_broadcast"

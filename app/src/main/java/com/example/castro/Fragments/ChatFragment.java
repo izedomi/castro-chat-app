@@ -136,14 +136,22 @@ public class ChatFragment extends Fragment {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         String data = dataSnapshot.child("message").getValue().toString();
-                        if(data.isEmpty() || data == null){h.tvMsg.setText("");}
-                        h.tvMsg.setText(data);
-                        if(model.isSeen()){
-                            h.tvMsg.setTypeface(h.tvMsg.getTypeface(), Typeface.BOLD);
+                        String type = dataSnapshot.child("type").getValue().toString();
+
+                        if(type.equals("image")){
+                            h.tvMsg.setText("**image**");
                         }
                         else{
-                            h.tvMsg.setTypeface(h.tvMsg.getTypeface(), Typeface.NORMAL);
+                            if(data.isEmpty() || data == null){h.tvMsg.setText("");}
+                            h.tvMsg.setText(data);
+                            if(model.isSeen()){
+                                h.tvMsg.setTypeface(h.tvMsg.getTypeface(), Typeface.BOLD);
+                            }
+                            else{
+                                h.tvMsg.setTypeface(h.tvMsg.getTypeface(), Typeface.NORMAL);
+                            }
                         }
+
                     }
 
                     @Override
@@ -198,8 +206,6 @@ public class ChatFragment extends Fragment {
 
                     }
                 });
-
-
 
             }
 

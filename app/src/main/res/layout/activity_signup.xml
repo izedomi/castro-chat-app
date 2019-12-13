@@ -29,12 +29,12 @@
             android:padding="45dp">
 
 
-            <de.hdodenhof.circleimageview.CircleImageView
+         <!--   <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="7dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/logo" />  -->
 
             <View
                 android:layout_width="match_parent"

@@ -51,7 +51,6 @@ public class Castro extends Application {
 
                 }
             });
-
         }
 
 

@@ -2,9 +2,10 @@
 <resources>
 
 
-    <color name="colorPrimary">#03A9F4</color>
+    <color name="colorPrimary">#014422</color>
     <!-- <color name="colorPrimaryDark">#414040</color> -->
-    <color name="colorPrimaryDark">#039BE5</color>
+    <color name="colorPrimaryDark">#003600</color>
+    <color name="colorAccent"> #006400</color>
 
 
 
@@ -12,9 +13,9 @@
 
 
   <!-- <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color> -->
-   <!-- <color name="colorAccent">#008577</color> -->
-    <color name="colorAccent"> #D81B60</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#008577</color> -->
+
     <color name="colorWhite">#ffffff</color>
     <color name="colorGray">#cccccc</color>
     <color name="colorLightWhite">#fcfcfc</color>

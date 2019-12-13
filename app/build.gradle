@@ -58,4 +58,7 @@ dependencies {
     //okhttp
     implementation("com.squareup.okhttp3:okhttp:4.0.1")
 
+    //floating action menu button
+    implementation 'com.github.clans:fab:1.6.4'
+
 }

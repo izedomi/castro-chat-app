@@ -37,11 +37,11 @@
             android:layout_below="@+id/toolbar">
 
 
-            <de.hdodenhof.circleimageview.CircleImageView
+          <!--  <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:src="@drawable/logo" />
+                android:src="@drawable/logo" /> -->
 
             <View
                 android:layout_width="match_parent"

@@ -24,6 +24,7 @@ import com.example.castro.Fragments.ChatFragment;
 import com.example.castro.Fragments.FriendsFragment;
 import com.example.castro.Fragments.RequestsFragments;
 import com.example.castro.R;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,6 +60,7 @@ public class OverviewActivity extends AppCompatActivity {
     TextView tvBroadcastCount;
     LinearLayout llDrawerHeaderBg;
     CircleImageView imvDrawerImg;
+    FloatingActionButton fab;
 
     String staffId;
 
@@ -82,6 +84,7 @@ public class OverviewActivity extends AppCompatActivity {
         navView = (NavigationView) findViewById(R.id.nav_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         tvBroadcastCount = (TextView) findViewById(R.id.tv_broadcast_count);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
         View headerView = navView.getHeaderView(0);
@@ -95,6 +98,13 @@ public class OverviewActivity extends AppCompatActivity {
             tvDrawerEmail.setText(mAuth.getCurrentUser().getEmail());
         }
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(OverviewActivity.this, AllUsersActivity.class);
+                startActivity(i);
+            }
+        });
 
         addMenu();
         count_broadcast();

@@ -6,24 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity"
     android:alpha="0.8"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimary">
 
 
-   <de.hdodenhof.circleimageview.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
        android:id="@+id/logo"
-       android:layout_width="100dp"
-       android:layout_height="100dp"
-       android:src="@drawable/logo"
+       android:layout_width="150dp"
+       android:layout_height="150dp"
+       android:src="@drawable/army"
        android:layout_centerInParent="true"/>
 
     <TextView
+        android:layout_below="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="casTro Chat App"
+        android:text="6 Division Comm. App"
         android:textAlignment="center"
         android:textColor="@color/colorLightWhite"
-        android:textSize="22sp"
-        android:layout_below="@+id/logo"/>
+        android:textSize="22sp"/>
 
 </RelativeLayout>
